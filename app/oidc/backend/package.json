@@ -1,0 +1,12 @@
+{
+  "name": "oidc-backend",
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "redis": "^4.6.7",
+    "connect-redis": "^7.1.0",
+    "openid-client": "^5.1.1"
+  }
+}

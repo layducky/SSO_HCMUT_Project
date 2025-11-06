@@ -1,0 +1,17 @@
+{
+  "name": "oidc-frontend",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "start": "HOST=0.0.0.0 PORT=3001 serve -s dist"
+  },
+  "dependencies": {
+    "react": "^18",
+    "react-dom": "^18",
+    "serve": "^14"
+  },
+  "devDependencies": {
+    "vite": "^5"
+  }
+}
