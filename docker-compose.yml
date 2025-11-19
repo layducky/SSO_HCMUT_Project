@@ -48,8 +48,34 @@ services:
   #####-----------------------
 
 
-  #### Cuong
-  ####----------------------
+  ##### Cuong - CAS Implementation
+  cas-backend:
+    build: ./app/cas/backend
+    container_name: cas-backend
+    ports:
+      - "8082:8080"
+    environment:
+      - SESSION_SECRET=cas-demo-secret
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - redis
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  cas-frontend:
+    build: ./app/cas/frontend
+    container_name: cas-frontend
+    ports:
+      - "3002:3002"
+    environment:
+      - VITE_API_URL=http://cas-backend:8080
+    depends_on:
+      cas-backend:
+        condition: service_healthy
 
   #### Minh
   ####----------------------
