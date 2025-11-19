@@ -4,18 +4,18 @@ services:
   oidc-provider:
     build: ./sso-providers/oidc-provider
     container_name: oidc-provider
+    ports:
+      - "9090:8080"
     environment:
       - KEYCLOAK_ADMIN=admin
       - KEYCLOAK_ADMIN_PASSWORD=admin
     volumes:
       - ./sso-providers/oidc-provider/realms:/opt/keycloak/data/import
-    ports:
-      - "9090:8080"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/realms/demo"]
-      interval: 2s
-      retries: 15
-
+    command: >
+      start-dev
+      --hostname=http://localhost:9090
+      --hostname-strict=false
+      --import-realm
 
   oidc-backend:
     build: ./app/oidc/backend
@@ -27,11 +27,14 @@ services:
       - OIDC_ISSUER=http://oidc-provider:8080/realms/demo
       - OIDC_CLIENT_ID=oidc-demo
       - OIDC_CLIENT_SECRET=demosecret
-      - OIDC_REDIRECT_URI=http://localhost:3001/callback
+      - OIDC_REDIRECT_URI=http://localhost:8081/callback
+      - OIDC_PUBLIC_ISSUER=http://localhost:9090/realms/demo
+
       - SESSION_SECRET=dev-secret
     depends_on:
       - oidc-provider
       - redis
+    command: sh -c "sleep 55 && node index.js"
 
   oidc-frontend:
     build: ./app/oidc/frontend

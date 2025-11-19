@@ -1,62 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>OIDC Frontend</title>
-    <!-- React & ReactDOM UMD -->
-    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <!-- Babel standalone để parse JSX -->
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  </head>
-  <body>
-    <div id="root"></div>
+<head>
+  <meta charset="UTF-8" />
+  <title>OIDC SPA Frontend</title>
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+  <div id="root"></div>
 
-    <!-- App component -->
-    <script type="text/babel">
-      const { useState } = React;
+  <script type="text/babel">
+    const { useState, useEffect } = React;
 
-      function App() {
-        const [user, setUser] = useState(null);
+    function App() {
+      const [user, setUser] = useState(null);
 
-        const handleLogin = () => {
-          window.location.href = "http://localhost:8081/login";
-        };
+      const handleLogin = () => {
+        window.location.href = "http://localhost:8081/login";
+      };
 
-        const fetchUser = async () => {
-          const res = await fetch("http://localhost:8081/dashboard", {
-            credentials: "include",
-          });
-          if (res.ok) {
-            const data = await res.json();
-            setUser(data.user);
-          } else {
-            alert("Please log in first");
-          }
-        };
+      useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('logged_in')) {
+          fetch('http://localhost:8081/user', { credentials: 'include' })
+            .then(res => res.json())
+            .then(data => setUser(data.user))
+            .catch(err => console.error(err));
 
-        return (
-          <div style={{ textAlign: "center", marginTop: "50px" }}>
-            <h2>OIDC Demo Frontend</h2>
-            {!user ? (
-              <>
-                <button onClick={handleLogin}>Login with OIDC</button>
-                <br />
-                <button onClick={fetchUser} style={{ marginTop: "10px" }}>
-                  Check Dashboard
-                </button>
-              </>
-            ) : (
-              <div>
-                <h3>Welcome, {user.name || user.preferred_username}</h3>
-                <p>Email: {user.email}</p>
-              </div>
-            )}
-          </div>
-        );
-      }
+          window.history.replaceState({}, document.title, '/');
+        }
+      }, []);
 
-      ReactDOM.createRoot(document.getElementById("root")).render(<App />);
-    </script>
-  </body>
+      return (
+        <div style={{ textAlign: 'center', marginTop: '50px' }}>
+          <h2>OIDC SPA Demo</h2>
+          {!user ? (
+            <button onClick={handleLogin}>Login with OIDC</button>
+          ) : (
+            <div>
+              <h3>Welcome, {user.name || user.preferred_username}</h3>
+              <p>Email: {user.email}</p>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+</body>
 </html>

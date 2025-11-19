@@ -7,8 +7,9 @@
       "enabled": true,
       "protocol": "openid-connect",
       "publicClient": false,
+      "clientAuthenticatorType": "client-secret",
       "secret": "demosecret",
-      "redirectUris": ["http://localhost:3001/callback"],
+      "redirectUris": ["http://localhost:8081/callback"],
       "directAccessGrantsEnabled": true
     }
   ],
