@@ -23,4 +23,13 @@ router.get('/protected-data', requireAuth, (req, res) => {
   });
 });
 
+router.get('/app2-data', requireAuth, (req, res) => {
+    res.json({ 
+        message: 'Protected data',
+        app: 'Application 2 - HR System',
+        user: req.session.user,
+        timestamp: new Date().toISOString()
+    });
+});
+
 export default router;

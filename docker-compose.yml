@@ -76,6 +76,14 @@ services:
     depends_on:
       cas-backend:
         condition: service_healthy
+  
+  cas-app2:
+    build: ./app/cas/app2
+    container_name: cas-app2
+    ports:
+      - "3003:3003"
+    environment:
+      - VITE_API_URL=http://cas-backend:8080
 
   #### Minh
   ####----------------------

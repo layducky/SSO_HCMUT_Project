@@ -3,102 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CAS Single Sign-On Demo</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .container {
-            background: white;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            max-width: 400px;
-            width: 100%;
-        }
-
-        h1 {
-            color: #333;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #333;
-        }
-
-        input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-
-        button {
-            background: #667eea;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            width: 100%;
-            margin: 5px 0;
-        }
-
-        button:hover {
-            background: #5a6fd8;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .user-info {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 5px;
-            margin: 15px 0;
-        }
-
-        .api-response {
-            margin-top: 15px;
-            padding: 15px;
-            background: #e9ecef;
-            border-radius: 5px;
-            white-space: pre-wrap;
-            font-family: monospace;
-        }
-
-        .logout-btn {
-            background: #dc3545;
-        }
-
-        .logout-btn:hover {
-            background: #c82333;
-        }
-    </style>
+    <title>CAS Single Sign-On</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
@@ -117,8 +23,8 @@
                 <button onclick="handleLogin()">Login</button>
                 <div style="margin-top: 15px; font-size: 14px; color: #666;">
                     <p>Test accounts:</p>
-                    <p>• user1 / password1</p>
-                    <p>• user2 / password2</p>
+                    <p>• ndcuong / ndcuong</p>
+                    <p>• crypto / crypto</p>
                 </div>
             </div>
 
@@ -134,7 +40,6 @@
     <script>
         const API_BASE_URL = 'http://localhost:8082';
 
-        // Check auth status on page load
         document.addEventListener('DOMContentLoaded', function() {
             checkAuthStatus();
         });

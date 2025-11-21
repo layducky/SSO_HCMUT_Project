@@ -3,8 +3,8 @@ const router = express.Router();
 
 // Mock user database
 const users = [
-  { id: 1, username: 'user1', password: 'password1', email: 'user1@example.com' },
-  { id: 2, username: 'user2', password: 'password2', email: 'user2@example.com' }
+  { id: 1, username: 'ndcuong', password: 'ndcuong', email: 'ndcuong@example.com' },
+  { id: 2, username: 'crypto', password: 'crypto', email: 'crypto@example.com' }
 ];
 
 // CAS Login endpoint
@@ -14,10 +14,8 @@ router.post('/login', (req, res) => {
   const user = users.find(u => u.username === username && u.password === password);
   
   if (user) {
-    // Generate service ticket (simplified)
     const serviceTicket = `ST-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
     
-    // Store ticket in session
     req.session.serviceTicket = serviceTicket;
     req.session.user = user;
     
@@ -34,7 +32,6 @@ router.post('/login', (req, res) => {
   }
 });
 
-// CAS Service Validate endpoint
 router.get('/validate', (req, res) => {
   const { service, ticket } = req.query;
   
@@ -42,8 +39,6 @@ router.get('/validate', (req, res) => {
     return res.status(400).json({ success: false, message: 'No ticket provided' });
   }
   
-  // In a real implementation, you'd validate the ticket against your ticket registry
-  // For demo, we'll accept any ticket that starts with "ST-"
   if (ticket.startsWith('ST-')) {
     res.json({
       success: true,
@@ -58,7 +53,6 @@ router.get('/validate', (req, res) => {
   }
 });
 
-// Logout endpoint
 router.post('/logout', (req, res) => {
   req.session.destroy((err) => {
     if (err) {
