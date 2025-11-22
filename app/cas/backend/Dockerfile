@@ -1,6 +1,5 @@
 FROM node:18-alpine
 
-# Cài đặt curl cho healthcheck
 RUN apk add --no-cache curl
 
 WORKDIR /app

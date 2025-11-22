@@ -2,13 +2,14 @@ import express from 'express';
 import session from 'express-session';
 import cors from 'cors';
 import memoryStore from 'memorystore';
+import authRoutes from './routes/auth.js';
+import protectedRoutes from './routes/protected.js';
 
 const app = express();
 const MemoryStore = memoryStore(session);
 
-// Middleware
 app.use(cors({
-  origin: ['http://localhost:3002', 'http://cas-frontend:3002'],
+  origin: true, 
   credentials: true
 }));
 
@@ -18,32 +19,26 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   store: new MemoryStore({
-    checkPeriod: 86400000 // 24 hours
+    checkPeriod: 86400000 
   }),
   cookie: {
     secure: false,
-    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    maxAge: 24 * 60 * 60 * 1000 
   }
 }));
-
-// Import routes sau khi express app được khởi tạo
-import authRoutes from './routes/auth.js';
-import protectedRoutes from './routes/protected.js';
 
 // Routes
 app.use('/auth', authRoutes);
 app.use('/api', protectedRoutes);
 
-// Simple health check endpoint
 app.get('/health', (req, res) => {
-  res.status(200).json({ 
+  res.json({ 
     status: 'OK', 
     service: 'CAS Backend',
     timestamp: new Date().toISOString()
   });
 });
 
-// Root endpoint
 app.get('/', (req, res) => {
   res.json({ 
     message: 'CAS Backend is running',
@@ -57,6 +52,7 @@ app.get('/', (req, res) => {
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`✅ CAS Backend running on port ${PORT}`);
-  console.log(`🔗 Health check: http://localhost:${PORT}/health`);
+  console.log(`CAS Backend running on port ${PORT}`);
+  console.log(`Health check: http://localhost:${PORT}/health`);
+  console.log(`CORS: Enabled for all origins`);
 });

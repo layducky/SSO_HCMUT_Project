@@ -7,7 +7,6 @@ RUN npm install
 
 COPY . .
 
-# Install simple HTTP server
 RUN npm install -g http-server
 
 EXPOSE 3002

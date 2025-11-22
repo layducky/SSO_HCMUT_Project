@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-// Sửa thành URL trực tiếp thay vì dùng biến môi trường
 const API_BASE_URL = 'http://localhost:8082';
 
 class CASApp {
@@ -45,7 +44,6 @@ class CASApp {
         document.getElementById('content').style.display = 'block';
         document.getElementById('login-form').style.display = 'none';
         
-        // Display user data
         document.getElementById('user-data').innerHTML = `
             <h3>User Information</h3>
             <p><strong>Username:</strong> ${user.username}</p>
@@ -55,30 +53,25 @@ class CASApp {
     }
 
     bindEvents() {
-        // Login button
         document.getElementById('login-btn').addEventListener('click', () => {
             document.getElementById('login-form').style.display = 'block';
             document.getElementById('content').style.display = 'none';
         });
 
-        // Cancel login
         document.getElementById('cancel-login').addEventListener('click', () => {
             document.getElementById('login-form').style.display = 'none';
             this.showLoginUI();
         });
 
-        // Login form
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             await this.handleLogin();
         });
 
-        // Logout button
         document.getElementById('logout-btn').addEventListener('click', async () => {
             await this.handleLogout();
         });
 
-        // Fetch protected data
         document.getElementById('fetch-data').addEventListener('click', async () => {
             await this.fetchProtectedData();
         });
@@ -140,7 +133,6 @@ class CASApp {
     }
 }
 
-// Initialize the app when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     new CASApp();
 });
