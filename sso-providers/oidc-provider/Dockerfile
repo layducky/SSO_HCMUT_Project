@@ -1,3 +1,10 @@
-FROM quay.io/keycloak/keycloak:25.0
+FROM node:18-alpine
 
-CMD ["start-dev", "--import-realm"]
+WORKDIR /app
+COPY package*.json ./
+
+RUN npm install
+COPY . .
+EXPOSE 8080
+
+CMD ["node", "index.js"]

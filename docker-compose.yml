@@ -7,15 +7,13 @@ services:
     ports:
       - "9090:8080"
     environment:
-      - KEYCLOAK_ADMIN=admin
-      - KEYCLOAK_ADMIN_PASSWORD=admin
-    volumes:
-      - ./sso-providers/oidc-provider/realms:/opt/keycloak/data/import
-    command: >
-      start-dev
-      --hostname=http://localhost:9090
-      --hostname-strict=false
-      --import-realm
+      - PORT=8080
+      - ISSUER=http://localhost:9090
+      - JWT_SECRET=super-secret-key-change-in-production-2024
+      - OIDC_CLIENT_ID=oidc-demo
+      - OIDC_CLIENT_SECRET=demosecret
+      - OIDC_REDIRECT_URI=http://localhost:8081/callback
+      - REDIS_URL=redis://redis:6379
 
   oidc-backend:
     build: ./app/oidc/backend
@@ -23,18 +21,17 @@ services:
     ports:
       - "8081:8080"
     environment:
+      - PORT=8080
       - REDIS_URL=redis://redis:6379
-      - OIDC_ISSUER=http://oidc-provider:8080/realms/demo
+      - OIDC_ISSUER=http://oidc-provider:8080
       - OIDC_CLIENT_ID=oidc-demo
       - OIDC_CLIENT_SECRET=demosecret
       - OIDC_REDIRECT_URI=http://localhost:8081/callback
-      - OIDC_PUBLIC_ISSUER=http://localhost:9090/realms/demo
-
-      - SESSION_SECRET=dev-secret
+      - OIDC_PUBLIC_ISSUER=http://localhost:9090
+      - SESSION_SECRET=dev-secret-session-key-2024
     depends_on:
       - oidc-provider
-      - redis
-    command: sh -c "sleep 55 && node index.js"
+    command: sh -c "sleep 5 && node index.js"
 
   oidc-frontend:
     build: ./app/oidc/frontend
@@ -49,41 +46,41 @@ services:
 
 
   ##### Cuong - CAS Implementation
-  cas-backend:
-    build: ./app/cas/backend
-    container_name: cas-backend
-    ports:
-      - "8082:8080"
-    environment:
-      - SESSION_SECRET=cas-demo-secret
-      - REDIS_URL=redis://redis:6379
-    depends_on:
-      - redis
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
+  # cas-backend:
+  #   build: ./app/cas/backend
+  #   container_name: cas-backend
+  #   ports:
+  #     - "8082:8080"
+  #   environment:
+  #     - SESSION_SECRET=cas-demo-secret
+  #     - REDIS_URL=redis://redis:6379
+  #   depends_on:
+  #     - redis
+  #   healthcheck:
+  #     test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
+  #     start_period: 10s
 
-  cas-frontend:
-    build: ./app/cas/frontend
-    container_name: cas-frontend
-    ports:
-      - "3002:3002"
-    environment:
-      - VITE_API_URL=http://cas-backend:8080
-    depends_on:
-      cas-backend:
-        condition: service_healthy
+  # cas-frontend:
+  #   build: ./app/cas/frontend
+  #   container_name: cas-frontend
+  #   ports:
+  #     - "3002:3002"
+  #   environment:
+  #     - VITE_API_URL=http://cas-backend:8080
+  #   depends_on:
+  #     cas-backend:
+  #       condition: service_healthy
   
-  cas-app2:
-    build: ./app/cas/app2
-    container_name: cas-app2
-    ports:
-      - "3003:3003"
-    environment:
-      - VITE_API_URL=http://cas-backend:8080
+  # cas-app2:
+  #   build: ./app/cas/app2
+  #   container_name: cas-app2
+  #   ports:
+  #     - "3003:3003"
+  #   environment:
+  #     - VITE_API_URL=http://cas-backend:8080
 
   #### Minh
   ####----------------------
