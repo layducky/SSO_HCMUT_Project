@@ -37,7 +37,7 @@ Thiết lập này nhằm mục đích **giảm sát, phân tích và so sánh**
    - Chỉ chỉnh sửa trong thư mục nhà cung cấp SSO mà bạn phụ trách.
 
 **NGUYÊN TẮC**: Không dùng tới phần code hoặc cấu hình của người khác.
-**OIDC Diagram**
+### **OIDC Diagram**
 ```mermaid
 sequenceDiagram
     participant Browser
