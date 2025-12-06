@@ -4,13 +4,19 @@ const session = require('express-session');
 const path = require('path');
 const fs = require('fs');
 const saml = require('samlify');
+const { createValidator, ValidationMode } = require('./validator');
 
-// Set up samlify validator according to documentation
-saml.setSchemaValidator({
-  validate: (xml) => {
-    return { isValid: true }; // For demo purposes - you can implement proper validation here
-  }
-});
+// 🔐 SAML XML Schema Validator Configuration
+// Available modes: DISABLED, RELAXED, STRICT
+// - DISABLED: No validation (fastest, least secure)
+// - RELAXED: Basic XML well-formedness + SAML structure check (recommended for demo)
+// - STRICT: Full XSD schema validation (most secure, requires schema files)
+
+const VALIDATION_MODE = ValidationMode.RELAXED; // Change this to switch modes
+
+// Set up samlify validator
+const validator = createValidator(VALIDATION_MODE);
+saml.setSchemaValidator(validator);
 
 const app = express();
 app.set('view engine', 'ejs');
